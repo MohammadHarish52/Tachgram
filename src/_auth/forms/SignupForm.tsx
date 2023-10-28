@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { SignupValidation } from "@/lib/validation";
 import { Loader } from "lucide-react";
 import { Link } from "react-router-dom";
+import { createUSerAccount } from "@/lib/appwrite/api";
 
 const SignupForm = () => {
   const isLoading = false;
@@ -32,14 +33,19 @@ const SignupForm = () => {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof SignupValidation>) {
     // Do something with the form values.
-    const newUser = await createUserAccount(values);
-    console.log(values);
+    const newUser = await createUSerAccount(values);
+    console.log(newUser);
   }
   return (
     <Form {...form}>
       <div className="sm:w-420 flex-center flex-col">
-        <img src="/assets/images/tachlogogram.svg" alt="" />
-        <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12">
+        <img
+          width={300}
+          height={75}
+          src="/assets/images/tachlogogram.svg"
+          alt=""
+        />
+        <h2 className="h3-bold md:h2-bold mb-1 text-left ">
           Create a new Account
         </h2>
         <p className="text-light-3 small-medium md:base-regular mt-2">
