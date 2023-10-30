@@ -16,10 +16,19 @@ import { SignupValidation } from "@/lib/validation";
 import { Loader } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createUSerAccount } from "@/lib/appwrite/api";
+import {
+  userCreateUserAccount,
+  userSigninAccount,
+} from "@/lib/react-query/queriesAndMutations";
 
 const SignupForm = () => {
   const { toast } = useToast();
-  const isLoading = false;
+
+  const { mutateAsync: createUSerAccount, isLoading: isCreatingUser } =
+    userCreateUserAccount();
+
+  const { mutateAsync: signInAccount, isLoading: isSigningIn } =
+    userSigninAccount();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof SignupValidation>>({
@@ -42,7 +51,13 @@ const SignupForm = () => {
         title: "Sign-up Failed,Try again",
       });
     }
-    // const session =await signInAccount()
+    const session = await signInAccount({
+      email: values.email,
+      password: values.password,
+    });
+    if (!session) {
+      return toast({ title: "Sign in failed , please try again" });
+    }
   }
   return (
     <Form {...form}>
@@ -141,7 +156,7 @@ const SignupForm = () => {
             )}
           />
           <Button type="submit" className="shad-button_primary mt-1">
-            {isLoading ? (
+            {isCreatingUser ? (
               <div className="flex-center gap-2">
                 <Loader /> Loading...
               </div>

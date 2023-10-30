@@ -1,3 +1,13 @@
+//IcontextType
+export type IcontextType = {
+  user: IUser;
+  isLoading: boolean;
+  setUser: React.Dispatch<React.SetStateAction<IUser>>;
+  isAuthenticated: boolean;
+  SetIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+  checkAuthUser: () => Promise<boolean>;
+};
+
 // Represents a navigation link with an image URL, a route, and a label
 export type INavLink = {
   imgURL: string;
