@@ -16,3 +16,13 @@ export const SignupValidation = z.object({
     })
     .max(16),
 });
+
+export const SigninValidation = z.object({
+  email: z.string().email(),
+  password: z
+    .string()
+    .min(8, {
+      message: "Too short bitch",
+    })
+    .max(16),
+});

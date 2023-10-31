@@ -1,7 +1,6 @@
 import { INewUser } from "@/types";
 import { ID, Query } from "appwrite";
 import { account, appwriteConfig, avatars, databases } from "./config";
-import { error } from "console";
 
 // Function to create a new user account
 export async function createUSerAccount(user: INewUser) {
@@ -41,7 +40,7 @@ export async function saveUserToDB(user: {
   name: string;
   accountId: string;
   imageUrl: URL;
-  username: string;
+  username?: string;
 }) {
   try {
     const newUser = await databases.createDocument(
