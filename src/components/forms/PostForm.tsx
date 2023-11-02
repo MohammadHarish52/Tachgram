@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -14,24 +13,27 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import FileUploader from "../shared/FileUploader";
 import { Input } from "../ui/input";
+import { postValidation } from "@/lib/validation";
+import { Models } from "appwrite";
 
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-});
+type postformProps = {
+  post?: Models.Document;
+};
 
-const PostForm = () => {
+const PostForm = ({ post }: postformProps) => {
   // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof postValidation>>({
+    resolver: zodResolver(postValidation),
     defaultValues: {
-      username: "",
+      caption: post ? post?.caption : "",
+      file: [],
+      location: post ? post?.location : "",
+      tags: post ? post.tags.join(",") : "",
     },
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof postValidation>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
@@ -65,7 +67,10 @@ const PostForm = () => {
             <FormItem>
               <FormLabel className="shad-form_label">Add photos</FormLabel>
               <FormControl>
-                <FileUploader />
+                <FileUploader
+                  fieldChange={field.onChange}
+                  mediaUrl={post?.imageUrl}
+                />
               </FormControl>
               <FormMessage className="shad-form_message" />
             </FormItem>
@@ -78,7 +83,7 @@ const PostForm = () => {
             <FormItem>
               <FormLabel className="shad-form_label">Add Location</FormLabel>
               <FormControl>
-                <Input type="text" className="shad-input" />
+                <Input type="text" className="shad-input" {...field} />
               </FormControl>
               <FormMessage className="shad-form_message" />
             </FormItem>
@@ -97,6 +102,7 @@ const PostForm = () => {
                   type="text"
                   className="shad-input"
                   placeholder="Art,Expression and Learn"
+                  {...field}
                 />
               </FormControl>
               <FormMessage className="shad-form_message" />

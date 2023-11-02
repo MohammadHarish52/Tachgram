@@ -26,3 +26,10 @@ export const SigninValidation = z.object({
     })
     .max(16),
 });
+
+export const postValidation = z.object({
+  caption: z.string().min(5).max(2200),
+  location: z.string().min(5).max(100),
+  file: z.custom<File[]>(),
+  tags: z.string(),
+});
