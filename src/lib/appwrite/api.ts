@@ -110,7 +110,7 @@ export async function createPost(post: INewPost) {
     const fileUrl = getFilePreview(uploadedFile.$id);
 
     if (!fileUrl) {
-      deleteFile(uploadedFile.$id);
+      await deleteFile(uploadedFile.$id);
       throw Error;
     }
     // convert tags into an array
@@ -124,9 +124,9 @@ export async function createPost(post: INewPost) {
       {
         creator: post.userId,
         caption: post.caption,
-        location: post.location,
         imageUrl: fileUrl,
         imageId: uploadedFile?.$id,
+        location: post.location,
         tags: tags,
       }
     );
@@ -151,12 +151,12 @@ export async function deleteFile(fileId: string) {
 
 export async function uploadFile(file: File) {
   try {
-    const uploadFile = await storage.createFile(
+    const uploadedFile = await storage.createFile(
       appwriteConfig.storageId,
       ID.unique(),
       file
     );
-    return uploadFile;
+    return uploadedFile;
   } catch (error) {
     console.log(error);
   }

@@ -79,7 +79,7 @@ const PostForm = ({ post }: postformProps) => {
         />
         <FormField
           control={form.control}
-          name="add-photos"
+          name="file"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="shad-form_label">Add photos</FormLabel>
