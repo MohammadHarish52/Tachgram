@@ -1,8 +1,23 @@
+import GridPostList from "@/components/shared/GridPostList";
+import SearchResults from "@/components/shared/SearchResults";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
 const Explore = () => {
   const [search, setSearch] = useState("");
+
+  // // Initialize an empty array to store posts
+  // const posts = [];
+
+  // // Check if there is a search query
+  // const shouldShowSearchResult = search !== "";
+
+  // // Check if posts should be displayed
+  // const shouldShowPosts =
+  //   // Check if there is no search result and every page in the posts array has no documents
+  //   !shouldShowSearchResult &&
+  //   posts.pages.every((item) => item.documents.length === 0);
+
   return (
     <div className="explore-container">
       <div className="explore-inner_container">
@@ -35,7 +50,17 @@ const Explore = () => {
           />
         </div>
       </div>
-      <div className="flex flex-wrap gap-9 w-full max-w-5xl"></div>
+      <div className="flex flex-wrap gap-9 w-full max-w-5xl">
+        {/* {shouldShowSearchResult ? (
+          <SearchResults />
+        ) : shouldShowPosts ? (
+          <p className="text-light-4 mt-10 text-center w-full">End of posts</p>
+        ) : (
+          posts.pages.map((item, index) => (
+            <GridPostList key={`page-${index}`} posts={item.documents} />
+          ))
+        )} */}
+      </div>
     </div>
   );
 };

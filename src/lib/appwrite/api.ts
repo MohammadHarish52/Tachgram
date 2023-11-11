@@ -33,7 +33,6 @@ export async function createUSerAccount(user: INewUser) {
     return error;
   }
 }
-
 // Function to save user information to the database
 export async function saveUserToDB(user: {
   email: string;
@@ -54,7 +53,6 @@ export async function saveUserToDB(user: {
     console.log(error);
   }
 }
-
 // Function to sign in with an email and password
 export async function signInAccount(user: { email: string; password: string }) {
   try {
@@ -65,7 +63,6 @@ export async function signInAccount(user: { email: string; password: string }) {
     console.log(error);
   }
 }
-
 // Function to get the current user's information
 export async function getCurrentUser() {
   try {
@@ -87,7 +84,6 @@ export async function getCurrentUser() {
     console.log(error);
   }
 }
-
 export async function signOutAccount() {
   try {
     // Delete the current session
@@ -97,7 +93,6 @@ export async function signOutAccount() {
     console.log(error);
   }
 }
-
 export async function createPost(post: INewPost) {
   try {
     //upload image to storage
@@ -139,7 +134,6 @@ export async function createPost(post: INewPost) {
     console.log(error);
   }
 }
-
 export async function deleteFile(fileId: string) {
   try {
     await storage.deleteFile(appwriteConfig.storageId, fileId);
@@ -148,7 +142,6 @@ export async function deleteFile(fileId: string) {
     console.log(error);
   }
 }
-
 export async function uploadFile(file: File) {
   try {
     const uploadedFile = await storage.createFile(
@@ -161,7 +154,6 @@ export async function uploadFile(file: File) {
     console.log(error);
   }
 }
-
 export function getFilePreview(fileId: string) {
   try {
     const fileUrl = storage.getFilePreview(
@@ -235,7 +227,6 @@ export async function deleteSavePost(saveRecordId: string) {
     console.log(err);
   }
 }
-
 export async function getPostById(postId: string) {
   try {
     const post = await databases.getDocument(
@@ -305,6 +296,37 @@ export async function deletePost(postId: string, imageId: string) {
       appwriteConfig.postsCollectionId,
       postId
     );
+  } catch (error) {
+    console.log(error);
+  }
+}
+export async function getInfinitePosts({ pageParam }: { pageParam: null }) {
+  const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(10)];
+  if (pageParam) {
+    queries.push(Query.cursorAfter(pageParam.toString()));
+
+    try {
+      const posts = await databases.listDocuments(
+        appwriteConfig.databaseId,
+        appwriteConfig.postsCollectionId,
+        queries
+      );
+      if (!posts) throw Error;
+      return posts;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
+export async function searchPosts(searchTerm: string) {
+  try {
+    const posts = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postsCollectionId,
+      [Query.search("caption", searchTerm)]
+    );
+    if (!posts) throw Error;
+    return posts;
   } catch (error) {
     console.log(error);
   }
