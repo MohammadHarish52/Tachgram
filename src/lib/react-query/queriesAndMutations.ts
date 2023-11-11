@@ -1,8 +1,9 @@
-import { INewPost, INewUser } from "@/types";
+import { INewPost, INewUser, IUpdatePost } from "@/types";
 
 import {
   createPost,
   createUSerAccount,
+  deletePost,
   deleteSavePost,
   getCurrentUser,
   getPostById,
@@ -11,6 +12,7 @@ import {
   savePost,
   signInAccount,
   signOutAccount,
+  updatePost,
 } from "../appwrite/api";
 import {
   useQuery,
@@ -128,10 +130,35 @@ export const useGetCurrentUser = () => {
     queryFn: getCurrentUser,
   });
 };
-export const useGetPostById = (postId: string) => {
+export const useGetPostById = (postId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
     queryFn: () => getPostById(postId),
     enabled: !!postId,
+  });
+};
+export const useUpdatePost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (post: IUpdatePost) => updatePost(post),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POST_BY_ID, data?.$id],
+      });
+    },
+  });
+};
+export const useDeletePost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ postId, imageId }: { postId: string; imageID: string }) =>
+      deletePost(postId, imageId),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS, data?.$id],
+      });
+    },
   });
 };
